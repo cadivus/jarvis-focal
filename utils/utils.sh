@@ -91,6 +91,21 @@ jv_check_dependencies () {
             jv_warning "Please logout and login for new group permissions to take effect, then restart Jarvis"
             exit
         fi
+        
+        if [ "$jv_os_name" == "ubuntu" ] && [ "$jv_arch" == "x86_64" ]; then
+            case "$jv_os_version" in
+                "20.04")
+                    jv_yesno "Would you like to install missing python2?" || exit 1
+                    sudo apt install -y python2
+                    sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 1
+                    sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 2
+                    sudo update-alternatives --set python /usr/bin/python2
+                    wget "https://bootstrap.pypa.io/get-pip.py" --output-document=/tmp/jhaiserujhiasfjhfas__get-pip.py
+                    sudo python2 /tmp/jhaiserujhiasfjhfas__get-pip.py
+                    rm /tmp/jhaiserujhiasfjhfas__get-pip.py
+                    ;;
+            esac
+        fi
     fi
 }
 
@@ -323,14 +338,12 @@ jv_start_in_background () {
     nohup jarvis -$($verbose && echo v)n 2>&1 | jv_add_timestamps >> jarvis.log &
     cat <<EOM
 Jarvis has been launched in background
-
 To view Jarvis output:
 jarvis and select "View output"
 To check if jarvis is running:
 pgrep -laf jarvis.sh
 To stop Jarvis:
 jarvis and select "Stop Jarvis"
-
 You can now close this terminal
 EOM
 }
