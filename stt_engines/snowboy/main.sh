@@ -9,25 +9,35 @@ stt_sb_install () {
                 sb_supported_os=true
                 binaries="rpi-arm-raspbian-8.0-1.1.0"
                 jv_install libpython2.7 #755
+                jv_install python-pyaudio
             fi
         elif [ "$jv_os_name" == "osmc" ]; then #628
             if [[ "$(cat /etc/debian_version)" -ge 8 ]]; then
                 sb_supported_os=true
                 binaries="rpi-arm-raspbian-8.0-1.1.0"
+                jv_install python-pyaudio
             fi
         elif [ "$jv_os_name" == "ubuntu" ] && [ "$jv_arch" == "x86_64" ]; then
             case "$jv_os_version" in
                 "12.04") 
                     sb_supported_os=true
                     binaries="ubuntu1204-x86_64-1.1.0"
+                    jv_install python-pyaudio
                     ;;
                 "14.04"|"16.04")
                     sb_supported_os=true
                     binaries="ubuntu1404-x86_64-1.1.0"
+                    jv_install python-pyaudio
+                    ;;
+                "20.04")
+                    sb_supported_os=true
+                    binaries="ubuntu1404-x86_64-1.1.0"
+                    sudo apt install -y portaudio19-dev python3-dev python2-dev python3-pyaudio python-dev
+                    sudo pip install PyAudio
                     ;;
             esac
         fi
-        $sb_supported_os && jv_install bzip2 python-pyaudio python3-pyaudio libatlas-base-dev # https://github.com/alexylem/jarvis/issues/327
+        $sb_supported_os && jv_install bzip2 python3-pyaudio libatlas-base-dev # https://github.com/alexylem/jarvis/issues/327
     elif [ "$platform" = "osx" ]; then
         sb_supported_os=true
         binaries="osx-x86_64-1.1.0"
